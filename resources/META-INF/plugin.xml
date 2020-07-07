@@ -1,0 +1,41 @@
+<idea-plugin>
+  <id>cn.liberg.coder.LibergCoder</id>
+  <name>LibergCoder</name>
+  <version>1.0</version>
+  <vendor email="linysuccess@qq.com" url="http://liberg.cn">Liberg</vendor>
+
+  <description><![CDATA[
+      Auto-code assistant for Liberg-web-framework.<br>
+      <em>http://liberg.cn</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      first release version by liberg.cn<br>
+      <em>author: </em><br>
+      <em>author: </em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <actions>
+    <!-- Add your actions here -->
+    <group id="LibergCoder.Plugin" text="LibergCoder" description="LibergCoder">
+      <add-to-group group-id="MainMenu" anchor="last"  />
+      <action id="LibergCode.build" class="cn.liberg.coder.intellij.BuildAction" text="Build entity/interface..." description="build..." >
+        <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl B"/>
+      </action>
+      <separator></separator>
+      <action id="LibergCode.init" class="cn.liberg.coder.intellij.InitializeAction" text="Initialize..." description="initialize..." >
+      </action>
+      <action id="LibergCode.rebuild" class="cn.liberg.coder.intellij.RebuildAllAction" text="Rebuild All..." description="rebuild all..." >
+      </action>
+    </group>
+  </actions>
+
+</idea-plugin>
