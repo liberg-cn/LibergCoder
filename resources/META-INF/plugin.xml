@@ -22,18 +22,23 @@
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.java</depends>
 
   <actions>
     <!-- Add your actions here -->
     <group id="LibergCoder.Plugin" text="LibergCoder" description="LibergCoder">
       <add-to-group group-id="MainMenu" anchor="last"  />
-      <action id="LibergCode.build" class="cn.liberg.coder.intellij.BuildAction" text="Build entity/interface..." description="build..." >
-        <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl B"/>
+      <action id="LibergCoder.build" class="cn.liberg.coder.intellij.BuildAction" text="Build entity/interface..." description="build..." >
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift L"/>
       </action>
       <separator></separator>
-      <action id="LibergCode.init" class="cn.liberg.coder.intellij.InitializeAction" text="Initialize..." description="initialize..." >
+      <action id="LibergCoder.init" class="cn.liberg.coder.intellij.InitializeAction" text="Initialize..." description="initialize..." >
       </action>
-      <action id="LibergCode.rebuild" class="cn.liberg.coder.intellij.RebuildAllAction" text="Rebuild All..." description="rebuild all..." >
+      <action id="LibergCoder.rebuild" class="cn.liberg.coder.intellij.RebuildAllAction" text="Rebuild All..." description="rebuild all..." >
+      </action>
+      <separator></separator>
+      <action id="LibergCoder.about" class="cn.liberg.coder.intellij.AboutAction" text="About..." description="about..." >
       </action>
     </group>
   </actions>
