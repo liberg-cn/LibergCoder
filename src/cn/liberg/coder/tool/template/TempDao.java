@@ -22,6 +22,8 @@ public class TempDao {
 		TYPE_MAP.put("String", "StringColumn");
 		TYPE_MAP.put("int", "IntegerColumn");
 		TYPE_MAP.put("Integer", "IntegerColumn");
+		TYPE_MAP.put("byte", "ByteColumn");
+		TYPE_MAP.put("Byte", "ByteColumn");
 		TYPE_MAP.put("long", "LongColumn");
 		TYPE_MAP.put("Long", "LongColumn");
 	}

@@ -6,6 +6,7 @@ import cn.liberg.coder.tool.core.Formats;
 import cn.liberg.coder.tool.java.JInterface;
 import cn.liberg.coder.tool.java.JInterfaceMethod;
 import cn.liberg.coder.tool.java.MetaArg;
+import cn.liberg.coder.tool.util.FileUtils;
 import cn.liberg.coder.tool.util.Strings;
 
 import java.io.*;
@@ -58,7 +59,7 @@ public class TempInterfaceDocument {
                 isUpdate = true;
                 parseDocMeta(file);
             }
-            bw = new BufferedWriter(new FileWriter(file));
+            bw = FileUtils.bufferedWriter(file);
             bw.write("## " + selfName +"接口文档" + version);
             bw.write(Formats.NL2);
             bw.write("> **基础URL**"+Formats.NL);

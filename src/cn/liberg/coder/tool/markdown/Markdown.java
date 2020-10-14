@@ -33,7 +33,7 @@ public class Markdown implements ILineReader {
     }
 
     public static void main(String[] args) throws IOException {
-        File f = new File("D:\\test\\LibertTool\\01 Libert介绍.md");
+        File f = new File("D:/dev/java/github/Liberg/README.md");
         try {
             Markdown mp = new Markdown(f);
             System.out.println("end");

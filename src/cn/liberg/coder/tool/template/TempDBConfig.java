@@ -1,26 +1,28 @@
 package cn.liberg.coder.tool.template;
 
 import cn.liberg.coder.tool.LibergToolContext;
+import cn.liberg.coder.tool.util.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 
 public final class TempDBConfig {
     public static final String selfName = "DBConfig";
 
     public static void createFileIfAbsent(LibergToolContext ctx) throws Exception {
-        File file = new File(ctx.getDataPath() +selfName+".java");
-        if(!file.exists()) {
-            try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+        File file = new File(ctx.getDataPath() + selfName + ".java");
+        if (!file.exists()) {
+            try (BufferedWriter bw = FileUtils.bufferedWriter(file)) {
                 writeTo(bw, ctx);
-                System.out.println(ctx.getDataPackage() + "." + selfName + "  created.");
+                System.out.println("> " + ctx.getDataPackage() + "." + selfName + "  created.");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
     private static void writeTo(BufferedWriter bw, LibergToolContext ctx) throws Exception {
-        bw.write("package "+ctx.getDataPackage()+";\r\n");
+        bw.write("package " + ctx.getDataPackage() + ";\r\n");
         bw.write("\r\n");
         bw.write("import cn.liberg.database.IDataBaseConf;\r\n");
         bw.write("import org.springframework.beans.factory.annotation.Value;\r\n");

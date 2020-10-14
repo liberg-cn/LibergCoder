@@ -3,17 +3,19 @@ package cn.liberg.coder.tool.template;
 import cn.liberg.coder.tool.LibergToolContext;
 import cn.liberg.coder.tool.core.Apair;
 import cn.liberg.coder.tool.core.Formats;
+import cn.liberg.coder.tool.util.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Initialize操作的时候，修改application.properties
  * 增加server.port/spring.application.name，以及DataSource相关配置
- * todo: may be to support application.yaml later.
  */
 public class TempApplicationProperties {
     public static final String selfName = "application.properties";
@@ -26,12 +28,12 @@ public class TempApplicationProperties {
         initConfigs(ctx);
 
         Properties props = new Properties();
-        FileReader fr = new FileReader(file);
+        BufferedReader fr = FileUtils.bufferedReader(file);
         props.load(fr);
         fr.close();
         List<String> missingLines = buildMissingConfigLines(props);
         if(missingLines.size()>0) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+            BufferedWriter bw = FileUtils.bufferedWriter(file, true);
             for(String line : missingLines) {
                 bw.write(line);
                 bw.write("\r\n");

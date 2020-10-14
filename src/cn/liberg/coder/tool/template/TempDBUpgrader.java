@@ -5,6 +5,7 @@ import cn.liberg.coder.tool.LibergToolContext;
 import cn.liberg.coder.tool.java.JClass;
 import cn.liberg.coder.tool.java.JMethod;
 import cn.liberg.coder.tool.mysql.TableUpgrader;
+import cn.liberg.coder.tool.util.FileUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -25,24 +26,11 @@ public class TempDBUpgrader {
 
     public static void createFileIfAbsent(LibergToolContext context) {
         File file = new File(context.getDataPath() + NAME + ".java");
-        BufferedWriter bw = null;
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-                bw = new BufferedWriter(new FileWriter(file));
+        if (!file.exists()) {
+            try (BufferedWriter bw = FileUtils.bufferedWriter(file)) {
                 writeInitContent(context, bw);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

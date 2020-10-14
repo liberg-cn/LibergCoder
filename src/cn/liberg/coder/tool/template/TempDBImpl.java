@@ -8,6 +8,7 @@ import cn.liberg.coder.tool.java.JField;
 import cn.liberg.coder.tool.java.JMethod;
 import cn.liberg.coder.tool.mysql.Table;
 import cn.liberg.coder.tool.mysql.TableUpgrader;
+import cn.liberg.coder.tool.util.FileUtils;
 
 import java.io.*;
 
@@ -96,7 +97,7 @@ public class TempDBImpl {
     public static void createFileIfAbsent(LibergToolContext context) {
         File file = new File(context.getDataPath() + selfName + ".java");
         if (!file.exists()) {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            try (BufferedWriter bw = FileUtils.bufferedWriter(file)) {
                 writeInitContent(context, bw);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

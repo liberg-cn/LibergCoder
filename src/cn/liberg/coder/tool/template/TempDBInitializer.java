@@ -2,6 +2,7 @@ package cn.liberg.coder.tool.template;
 
 import cn.liberg.coder.tool.core.Formats;
 import cn.liberg.coder.tool.LibergToolContext;
+import cn.liberg.coder.tool.util.FileUtils;
 
 import java.io.*;
 
@@ -11,7 +12,7 @@ public class TempDBInitializer {
     public static void createFileIfAbsent(LibergToolContext context) {
         File file = new File(context.getDataPath() +name+".java");
         if(!file.exists()) {
-            try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            try(BufferedWriter bw = FileUtils.bufferedWriter(file)) {
                 bw.write(generateContent(context));
                 System.out.println("> " + context.getDataPackage() + "." + name + "  created.");
             } catch (FileNotFoundException e) {

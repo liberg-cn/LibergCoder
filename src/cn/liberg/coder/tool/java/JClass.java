@@ -2,6 +2,7 @@ package cn.liberg.coder.tool.java;
 
 import cn.liberg.coder.tool.LibergToolException;
 import cn.liberg.coder.tool.core.Formats;
+import cn.liberg.coder.tool.util.FileUtils;
 import cn.liberg.coder.tool.util.RegExpr;
 import cn.liberg.coder.tool.core.ILineReader;
 
@@ -55,7 +56,7 @@ public class JClass implements ILineReader {
 		if(file.exists()) {
 			loadedFromFile = true;
 			try {
-				mBr = new BufferedReader(new FileReader(file));
+				mBr = FileUtils.bufferedReader(file);
 				tryParse();
 			} catch (Exception e) {
 				throw new LibergToolException("Parse error: " + e.getMessage());
@@ -206,7 +207,7 @@ public class JClass implements ILineReader {
 			if(!file.exists()) {
 				file.createNewFile();
 			}
-			bw = new BufferedWriter(new FileWriter(file));
+			bw = FileUtils.bufferedWriter(file);
 			for(JDesc it : fileDescs) {
 				it.wirteTo(bw);
 			}
@@ -258,7 +259,6 @@ public class JClass implements ILineReader {
 		}
 	}
 
-	
 	private void tryParse() throws Exception {
 		String line;
 		

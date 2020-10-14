@@ -42,10 +42,7 @@ public class TempController {
 
     public void save() throws LibergToolException {
         parser.writeToFile(selfPath);
-        String tip = "  created.";
-        if(parser.loadedFromFile) {
-            tip = "  updated.";
-        }
+        String tip = parser.loadedFromFile ? "  updated." : "  created.";
         System.out.println("> " + context.getControllerApiPackage() + "." + selfName + tip);
     }
 

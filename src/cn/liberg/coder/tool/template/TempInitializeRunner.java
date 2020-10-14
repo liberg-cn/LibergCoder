@@ -1,6 +1,7 @@
 package cn.liberg.coder.tool.template;
 
 import cn.liberg.coder.tool.LibergToolContext;
+import cn.liberg.coder.tool.util.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,7 +13,7 @@ public class TempInitializeRunner {
     public static void createFileIfAbsent(LibergToolContext ctx) throws Exception {
         File file = new File(ctx.getMiscPath() +selfName+".java");
         if(!file.exists()) {
-            try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            try(BufferedWriter bw = FileUtils.bufferedWriter(file)) {
                 writeTo(bw, ctx);
                 System.out.println(ctx.getMiscPackage() + "." + selfName + "  created.");
             }

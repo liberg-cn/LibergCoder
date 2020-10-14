@@ -20,7 +20,6 @@ public class LibergTool {
     ArrayList<JClassEntity> entityList;
     TempDBImpl tempDBCreatorImpl;
     ArrayList<TempDao> tempDaoList;
-    ArrayList<TempAccess> tempAccessList;
     ArrayList<TempController> tempControllerList;
     ArrayList<TempInterfaceDocument> tempInterfaceDocumentList;
     ArrayList<TempService> tempServiceList;
@@ -34,7 +33,6 @@ public class LibergTool {
         entityList = new ArrayList<>();
         tempDBCreatorImpl = new TempDBImpl(ctx);
         tempDaoList = new ArrayList<>();
-        tempAccessList = new ArrayList<>();
         tempControllerList = new ArrayList<>();
         if (ctx.isCreateApiDocument()) {
             tempInterfaceDocumentList = new ArrayList<>();
@@ -120,7 +118,6 @@ public class LibergTool {
         entityList.add(entity);
         tempDBCreatorImpl.update(entity);
         tempDaoList.add(new TempDao(context, entity));
-//        tempAccessList.add(new TempAccess(context, entity));
         callback.onAddEntity(entity);
     }
 
@@ -145,9 +142,6 @@ public class LibergTool {
         for (TempDao dao : tempDaoList) {
             dao.save();
         }
-//        for (TempAccess access : tempAccessList) {
-//            access.save();
-//        }
         System.out.println(lineDivider);
         for (TempService service : tempServiceList) {
             service.save();

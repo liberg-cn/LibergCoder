@@ -2,6 +2,7 @@ package cn.liberg.coder.tool.template;
 
 import cn.liberg.coder.tool.LibergToolContext;
 import cn.liberg.coder.tool.core.ILineReader;
+import cn.liberg.coder.tool.util.FileUtils;
 import org.apache.http.util.TextUtils;
 
 import java.io.*;
@@ -66,7 +67,7 @@ public class TempApplicationPOM implements ILineReader {
     }
 
     private void load() throws Exception {
-        br = new BufferedReader(new FileReader(projectRootPath + selfName));
+        br = FileUtils.bufferedReader(projectRootPath + selfName);
         String line;
         boolean isBefore = true;
         boolean isInDependenciesTag = false;
@@ -91,7 +92,7 @@ public class TempApplicationPOM implements ILineReader {
     }
 
     public void save() throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(projectRootPath + selfName));
+        BufferedWriter bw = FileUtils.bufferedWriter(projectRootPath + selfName);
         for(String line : linesBeforeDependencies) {
             bw.write(line);
             bw.write("\r\n");
