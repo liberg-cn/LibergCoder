@@ -54,7 +54,6 @@ public class TempDao {
 	}
 
 	private void initTemplate() {
-		parser.fileDescs.add(JDesc.fileDesc());
 		parser.mPackage = context.getDaoPackage();
 		parser.mImports.add(context.getEntityPackage() + "." + entityName);
 		parser.mImports.add("cn.liberg.database.BaseDao");

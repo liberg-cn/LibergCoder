@@ -46,7 +46,6 @@ public class TempService {
     }
 
     private void initTemplate() {
-        parser.fileDescs.add(JDesc.fileDesc());
         parser.mPackage = context.getServicePackage();
 
         parser.mImports.add("cn.liberg.core.OperatorException");

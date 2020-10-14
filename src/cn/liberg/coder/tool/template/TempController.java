@@ -47,7 +47,6 @@ public class TempController {
     }
 
     private void initTemplate() {
-        parser.fileDescs.add(JDesc.fileDesc());
         parser.mPackage = context.getControllerApiPackage();
         parser.mImports.add("cn.liberg.core.OperatorException");
         parser.mImports.add(context.getServicePackage() + "." + serviceName);
