@@ -15,7 +15,7 @@ public class TempInitializeRunner {
         if(!file.exists()) {
             try(BufferedWriter bw = FileUtils.bufferedWriter(file)) {
                 writeTo(bw, ctx);
-                System.out.println(ctx.getMiscPackage() + "." + selfName + "  created.");
+                System.out.println("> " + ctx.getMiscPackage() + "." + selfName + "  created.");
             }
         }
     }
