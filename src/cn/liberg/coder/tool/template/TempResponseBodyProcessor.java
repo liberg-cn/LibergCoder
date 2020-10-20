@@ -38,13 +38,14 @@ public final class TempResponseBodyProcessor {
         bw.write("import java.io.IOException;\r\n");
         bw.write("import java.io.OutputStream;\r\n");
         bw.write("import java.nio.charset.Charset;\r\n");
+        bw.write("import java.nio.charset.StandardCharsets;\r\n");
         bw.write("\r\n");
         bw.write("\r\n");
         bw.write("@ControllerAdvice\r\n");
         bw.write("public class ResponseBodyProcessor extends FastJsonHttpMessageConverter implements ResponseBodyAdvice {\r\n");
         bw.write("    public static final String utf8 = \"utf-8\";\r\n");
+        bw.write("    public static final Charset utf8Charset = utf8Charset = StandardCharsets.UTF_8;\r\n");
         bw.write("    public static final String jsonpCallback = \"callback\";\r\n");
-        bw.write("    public static final Charset utf8Charset = Charset.forName(utf8);\r\n");
         bw.write("\r\n");
         bw.write("    @Override\r\n");
         bw.write("    public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, " +
@@ -54,6 +55,7 @@ public final class TempResponseBodyProcessor {
         bw.write("\r\n");
         bw.write("        HttpServletResponse response = ((ServletServerHttpResponse) serverHttpResponse).getServletResponse();\r\n");
         bw.write("        response.setCharacterEncoding(utf8);\r\n");
+        bw.write("        response.setHeader(\"Access-Control-Allow-Origin\", \"*\");\r\n");
         bw.write("\r\n");
         bw.write("        String json = JSON.toJSONString(o);\r\n");
         bw.write("        if (!StringUtils.isEmpty(callback)) {\r\n");

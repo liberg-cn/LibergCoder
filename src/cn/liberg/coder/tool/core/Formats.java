@@ -62,23 +62,25 @@ public final class Formats {
         System.out.println(toTableFieldName("mUserName"));
         System.out.println(toTableFieldName("mUserPPPsName"));
         System.out.println(toTableFieldName("name"));
+        System.out.println(toTableFieldName("mobile"));
         System.out.println("-------------");
 
-        System.out.println(toEntityFieldName("_user_name"));
-        System.out.println(toEntityFieldName("_user_name"));
-        System.out.println(toEntityFieldName("_user_ppps_name"));
-        System.out.println(toEntityFieldName("name"));
-        System.out.println("-------------");
-
-        System.out.println(toEntityFieldName("_user_name", (byte) 'm'));
-        System.out.println(toEntityFieldName("_user_name", (byte) 'm'));
-        System.out.println(toEntityFieldName("_user_ppps_name", (byte) 'm'));
-        System.out.println(toEntityFieldName("name", (byte)'m'));
-        System.out.println("-------------");
+//        System.out.println(toEntityFieldName("_user_name"));
+//        System.out.println(toEntityFieldName("_user_name"));
+//        System.out.println(toEntityFieldName("_user_ppps_name"));
+//        System.out.println(toEntityFieldName("name"));
+//        System.out.println("-------------");
+//
+//        System.out.println(toEntityFieldName("_user_name", (byte) 'm'));
+//        System.out.println(toEntityFieldName("_user_name", (byte) 'm'));
+//        System.out.println(toEntityFieldName("_user_ppps_name", (byte) 'm'));
+//        System.out.println(toEntityFieldName("name", (byte)'m'));
+//        System.out.println("-------------");
 
         System.out.println(forShort("name"));
         System.out.println(forShort("userName"));
         System.out.println(forShort("mUserName"));
+        System.out.println(forShort("mobile"));
 
         System.out.println("end");
     }
@@ -92,7 +94,10 @@ public final class Formats {
         boolean upper = true;
         boolean first = true;
         char c;
-        int start = name.charAt(0) == 'm' ? 1 : 0;
+        int start = 0;
+        if(name.length()>1 && name.charAt(0) == 'm' && Character.isUpperCase(name.charAt(1))) {
+            start = 1;
+        }
         for (int i = start; i < name.length(); i++) {
             c = name.charAt(i);
             if (c == '_') {
@@ -123,7 +128,7 @@ public final class Formats {
         int p = 0;
         int start = 0;
         buf[p++] = '_';
-        if (name.length() > 0 && name.charAt(0) == 'm') {
+        if (name.length() > 1 && name.charAt(0) == 'm' && Character.isUpperCase(name.charAt(1))) {
             start = 1;
             first = false;
         }

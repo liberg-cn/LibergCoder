@@ -20,6 +20,7 @@ public class TableField {
     public static final int TYPE_STRING = 1;
     public static final int TYPE_LONG = 2;
     public static final int TYPE_INT = 4;
+    public static final int TYPE_BYTE = 8;
 
     public static final RegExpr RE_STR = new RegExpr("^`(\\w+)` +([\\(\\)\\w]+) +DEFAULT +([-'\\w]+)( +COMMENT +'(.*)')?");
     public static final RegExpr RE_LINE = new RegExpr("^tb.add\\( *\"(\\w+)\", *((true|false), *)?type(\\w*)\\(([^\\)]*)\\), *(\"(.*)\"|null) *\\);$");
@@ -130,6 +131,16 @@ public class TableField {
                     typeDefine = "typeInt()";
                 }
                 break;
+            case "byte":
+                type = "TINYINT";
+                if (dv != null) {
+                    defaultValue = "'" + dv + "'";
+                    typeDefine = "typeByte(" + dv + ")";
+                } else {
+                    defaultValue = "'0'";
+                    typeDefine = "typeByte()";
+                }
+                break;
             default://不支持的类型暂时都归为VARCHAR
                 type = "VARCHAR(255)";
                 length = 255;
@@ -191,6 +202,15 @@ public class TableField {
             }
         }
         switch (typeStr) {
+            case "Byte":
+                tf.type = "TINYINT";
+                if(args!=null) {
+                    tf.defaultValue = args[0];
+                } else {
+                    tf.defaultValue = "0";
+                }
+                tf.typeDefine = "typeByte(" + argStr + ")";
+                break;
             case "Int":
                 tf.type = "INT";
                 if(args!=null) {

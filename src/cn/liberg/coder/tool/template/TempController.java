@@ -53,6 +53,7 @@ public class TempController {
         parser.mImports.add(context.getInterfacesPackage() + "." + interfaceName);
         parser.mImports.add("cn.liberg.core.Response");
         parser.mImports.add("org.springframework.beans.factory.annotation.Autowired");
+        parser.mImports.add("org.springframework.web.bind.annotation.PostMapping");
         parser.mImports.add("org.springframework.web.bind.annotation.RequestMapping");
         parser.mImports.add("org.springframework.web.bind.annotation.RequestParam");
         parser.mImports.add("org.springframework.web.bind.annotation.RestController");
