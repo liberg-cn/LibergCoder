@@ -1,5 +1,6 @@
 package cn.liberg.coder.tool.template;
 
+import cn.liberg.coder.tool.LibergTool;
 import cn.liberg.coder.tool.LibergToolContext;
 import cn.liberg.coder.tool.core.ILineReader;
 import cn.liberg.coder.tool.util.FileUtils;
@@ -25,6 +26,9 @@ public class TempApplicationPOM implements ILineReader {
     private BufferedReader br;
     private static final HtmlTag tagDependencies = new HtmlTag("dependencies");
 
+    public void addLibergIfAbsent() {
+        addDependency("cn.liberg", "liberg", LibergTool.VERSION);
+    }
 
     public void addFastJsonIfAbsent() {
         String version = "1.2.62";

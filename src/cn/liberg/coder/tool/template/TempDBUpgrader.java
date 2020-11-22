@@ -6,6 +6,7 @@ import cn.liberg.coder.tool.java.JClass;
 import cn.liberg.coder.tool.java.JMethod;
 import cn.liberg.coder.tool.mysql.TableUpgrader;
 import cn.liberg.coder.tool.util.FileUtils;
+import cn.liberg.coder.tool.util.TemplateUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -88,15 +89,14 @@ public class TempDBUpgrader {
         bw.write("\r\n");
         bw.write("import cn.liberg.database.IDataBaseConf;\r\n");
         bw.write("import cn.liberg.database.TableAlteration;\r\n");
-        bw.write("import org.apache.commons.logging.Log;\r\n");
-        bw.write("import org.apache.commons.logging.LogFactory;\r\n");
+        TemplateUtils.writeImportsLogger(bw);
         bw.write("\r\n");
         bw.write("import java.lang.reflect.Method;\r\n");
         bw.write("import java.sql.SQLException;\r\n");
         bw.write("import java.sql.Statement;\r\n");
         bw.write("\r\n");
         bw.write("public class " + NAME + " extends DBImpl {\r\n");
-        bw.write("    private Log logger = LogFactory.getLog(getClass());\r\n");
+        TemplateUtils.writeDefineLogger(bw, NAME);
         bw.write("\r\n");
         bw.write("    public " + NAME + "(IDataBaseConf dbConf) {\r\n");
         bw.write("        super(dbConf);\r\n");

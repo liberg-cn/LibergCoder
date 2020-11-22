@@ -16,7 +16,6 @@ public class TempController {
     String serviceName;
     JInterface jInterface;
 
-
     String selfName;
     String selfPath;
     JClass parser;
@@ -48,15 +47,18 @@ public class TempController {
 
     private void initTemplate() {
         parser.mPackage = context.getControllerApiPackage();
-        parser.mImports.add("cn.liberg.core.OperatorException");
-        parser.mImports.add(context.getServicePackage() + "." + serviceName);
-        parser.mImports.add(context.getInterfacesPackage() + "." + interfaceName);
-        parser.mImports.add("cn.liberg.core.Response");
-        parser.mImports.add("org.springframework.beans.factory.annotation.Autowired");
-        parser.mImports.add("org.springframework.web.bind.annotation.PostMapping");
-        parser.mImports.add("org.springframework.web.bind.annotation.RequestMapping");
-        parser.mImports.add("org.springframework.web.bind.annotation.RequestParam");
-        parser.mImports.add("org.springframework.web.bind.annotation.RestController");
+        parser.addImport(context.getEntityPackage()+".*");
+        parser.addImport("cn.liberg.core.OperatorException");
+        parser.addImport(context.getServicePackage() + "." + serviceName);
+        parser.addImport(context.getInterfacesPackage() + "." + interfaceName);
+        parser.addImport("cn.liberg.core.Response");
+        parser.addImport("org.slf4j.Logger");
+        parser.addImport("org.slf4j.LoggerFactory");
+        parser.addImport("org.springframework.beans.factory.annotation.Autowired");
+        parser.addImport("org.springframework.web.bind.annotation.PostMapping");
+        parser.addImport("org.springframework.web.bind.annotation.RequestMapping");
+        parser.addImport("org.springframework.web.bind.annotation.RequestParam");
+        parser.addImport("org.springframework.web.bind.annotation.RestController");
 
         parser.name = selfName;
         parser.defLine = "public class "+selfName+ " {";
@@ -76,6 +78,7 @@ public class TempController {
 
     private void initFieldsAndContructor() {
         parser.addField(new JField("private final "+serviceName+" service;"));
+        parser.addFieldIfAbsent(new JField("private static final Logger logger = LoggerFactory.getLogger("+selfName+".class);"));
 
         JMethod contructor = new JMethod("public "+selfName+"("+serviceName+" service) {");
         contructor.addAnnoLine("@Autowired");
@@ -135,7 +138,11 @@ public class TempController {
                         anno = new MetaAnno();
                         arg.anno = anno;
                     }
-                    anno.setValue("RequestParam", "value", "\""+ Formats.forShort(arg.name)+"\"");
+                    if(JType.isSimple(arg.type)) {
+                        anno.setValue("RequestParam", "value", "\""+ Formats.forShort(arg.name)+"\"");
+                    } else {
+                        anno.setValue("RequestBody", null, null);
+                    }
                     jm.addArg(arg);
                     if(in) {
                         rtLine.append(", ");
@@ -160,7 +167,7 @@ public class TempController {
             jm.appendBodyLine(rtLine.toString());
         }
         jm.appendBodyLine("        } catch (OperatorException e) {");
-        jm.appendBodyLine("            e.printStackTrace();");
+        jm.appendBodyLine("            logger.error(\"Error: {}={}\", e.code(), e.desc());");
         jm.appendBodyLine("            return Response.of(e.statusCode());");
         jm.appendBodyLine("        }");
         return jm;

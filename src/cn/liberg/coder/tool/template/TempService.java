@@ -48,11 +48,11 @@ public class TempService {
     private void initTemplate() {
         parser.mPackage = context.getServicePackage();
 
-        parser.mImports.add("cn.liberg.core.OperatorException");
-        parser.mImports.add("cn.liberg.core.Response");
-        parser.mImports.add(context.getEntityPackage() + "." + keyName);
-        parser.mImports.add(context.getInterfacesPackage() + "." + interfaceName);
-        parser.mImports.add("org.springframework.stereotype.Service");
+        parser.addImport("cn.liberg.core.OperatorException");
+        parser.addImport("cn.liberg.core.Response");
+        parser.addImport(context.getEntityPackage() + "." + keyName);
+        parser.addImport(context.getInterfacesPackage() + "." + interfaceName);
+        parser.addImport("org.springframework.stereotype.Service");
 
         parser.name = selfName;
         parser.defLine = "public class "+selfName+" implements "+interfaceName+" {";

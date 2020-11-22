@@ -9,6 +9,7 @@ import cn.liberg.coder.tool.java.JMethod;
 import cn.liberg.coder.tool.mysql.Table;
 import cn.liberg.coder.tool.mysql.TableUpgrader;
 import cn.liberg.coder.tool.util.FileUtils;
+import cn.liberg.coder.tool.util.TemplateUtils;
 
 import java.io.*;
 
@@ -113,14 +114,14 @@ public class TempDBImpl {
         bw.write("import cn.liberg.database.IDataBase;\r\n");
         bw.write("import cn.liberg.database.IDataBaseConf;\r\n");
         bw.write("import cn.liberg.database.TableBuilder;\r\n");
-        bw.write("import org.apache.commons.logging.Log;\r\n");
-        bw.write("import org.apache.commons.logging.LogFactory;\r\n");
+        TemplateUtils.writeImportsLogger(bw);
         bw.write("\r\n");
         bw.write("import java.sql.SQLException;\r\n");
         bw.write("import java.sql.Statement;\r\n");
+        bw.write("import "+ctx.getDaoPackage()+".*;\r\n");
         bw.write("\r\n");
         bw.write("public class DBImpl implements IDataBase {\r\n");
-        bw.write("    private Log logger = LogFactory.getLog(getClass());\r\n");
+        TemplateUtils.writeDefineLogger(bw, selfName);
         bw.write("    protected final IDataBaseConf dbConf;\r\n");
         bw.write("    protected final int dbVersion = 1;\r\n");
         bw.write("    protected final String dbName;\r\n");

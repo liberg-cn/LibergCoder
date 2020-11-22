@@ -9,6 +9,8 @@ import cn.liberg.coder.tool.util.Strings;
 import java.util.regex.Matcher;
 
 public class TableField {
+    public static int columnPrefixLen = "column".length();
+    public String columnFieldName;// columnName
     public String name;
     public String type;
     public int length;//仅对varchar类型有效
@@ -22,8 +24,7 @@ public class TableField {
     public static final int TYPE_INT = 4;
     public static final int TYPE_BYTE = 8;
 
-    public static final RegExpr RE_STR = new RegExpr("^`(\\w+)` +([\\(\\)\\w]+) +DEFAULT +([-'\\w]+)( +COMMENT +'(.*)')?");
-    public static final RegExpr RE_LINE = new RegExpr("^tb.add\\( *\"(\\w+)\", *((true|false), *)?type(\\w*)\\(([^\\)]*)\\), *(\"(.*)\"|null) *\\);$");
+    public static final RegExpr RE_LINE = new RegExpr("^tb.add\\( *\\w+.(\\w+), *((true|false), *)?type(\\w*)\\(([^\\)]*)\\)(, *\"(.*)\" *)?\\);$");
 
     private TableField() {
 
@@ -38,25 +39,6 @@ public class TableField {
         if(!typeDefine.equals(org.typeDefine)) {
             upgrader.modifyColumn(name, typeDefine);
         }
-    }
-
-    //"_case_words_id", typeLong(), null
-    //"_case_words_id", true, typeLong(), "comment"
-    public String toDefineLine() {
-        StringBuilder sb = new StringBuilder(128);
-        sb.append("\"");
-        sb.append(name);
-        sb.append("\", ");
-        if (isIndex) {
-            sb.append("true, ");
-        }
-        sb.append(typeDefine);
-        if (comment != null) {
-            sb.append(", \"" + comment + "\"");
-        } else {
-            sb.append(", null");
-        }
-        return sb.toString();
     }
 
     @Override
@@ -78,6 +60,7 @@ public class TableField {
     }
 
     public TableField(JField jf) {
+        columnFieldName = Formats.toColumnFieldName(jf.name);
         name = Formats.toTableFieldName(jf.name);
         comment = jf.desc;
         String orgType = jf.type;
@@ -150,30 +133,21 @@ public class TableField {
         }
     }
 
-    public static TableField fromString(String line) {
-        TableField tf = null;
-        Matcher mch = RE_STR.findMatcher(line);
-        if (mch != null) {
-            tf = new TableField();
-            tf.name = mch.group(1);
-            String type = mch.group(2).toUpperCase();
-            tf.type = type;
-            tf.defaultValue = mch.group(3);
-            if (mch.group(5) != null) {
-                tf.comment = mch.group(5);
-            }
-
-            String lenStr = null;
-            if (type.startsWith("VARCHAR")) {
-                lenStr = Strings.findFirst(type, 0, '(', ')');
-            }
-            if (lenStr != null) {
-                tf.length = Integer.parseInt(lenStr);
-            } else {
-                tf.length = 255;
-            }
+    //"_company_id", typeLong()
+    //"_company_id", true, typeLong(), "comment"
+    public String toDefineLine() {
+        StringBuilder sb = new StringBuilder(128);
+        sb.append("Dao.");
+        sb.append(columnFieldName);
+        sb.append(", ");
+        if (isIndex) {
+            sb.append("true, ");
         }
-        return tf;
+        sb.append(typeDefine);
+        if (comment != null) {
+            sb.append(", \"" + comment + "\"");
+        }
+        return sb.toString();
     }
 
     public static TableField fromDefineLine(String line) {
@@ -181,7 +155,9 @@ public class TableField {
         Matcher mch = RE_LINE.findMatcher(line);
         if (mch != null) {
             tf = new TableField();
-            tf.name = mch.group(1);
+
+            tf.columnFieldName = mch.group(1);
+            tf.name = Formats.toTableFieldName(tf.columnFieldName.substring(columnPrefixLen));
 
             if("true".equals(mch.group(3))) {
                 tf.isIndex = true;

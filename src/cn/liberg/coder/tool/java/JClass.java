@@ -7,10 +7,7 @@ import cn.liberg.coder.tool.util.RegExpr;
 import cn.liberg.coder.tool.core.ILineReader;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -23,7 +20,9 @@ public class JClass implements ILineReader {
 	public boolean loadedFromFile;
 	public ArrayList<JDesc> fileDescs;//文件最开始的注释
 	public String mPackage;
-	public ArrayList<String> mImports;
+	private ArrayList<String> mImports;
+	private HashSet<String> importsSet;
+
 	public String name;
 	public ArrayList<JDesc> classDescs;//类定义开始的注释
 	public ArrayList<String> classAnnos;//class注解
@@ -45,14 +44,15 @@ public class JClass implements ILineReader {
 	public JClass(String path) throws LibergToolException {
 		mCodeFilePath = path;
 		File file = new File(path);
-		fileDescs = new ArrayList<JDesc>();
-		mImports = new ArrayList<String>();
-		classDescs = new ArrayList<JDesc>();
-		classAnnos = new ArrayList<String>();
-		fields = new ArrayList<JField>();
-		methods = new ArrayList<JMethod>();
-		methodsMap = new HashMap<String, JMethod>();
-		fieldsMap = new HashMap<String, JField>();
+		fileDescs = new ArrayList<>();
+		mImports = new ArrayList<>();
+		importsSet = new HashSet<>();
+		classDescs = new ArrayList<>();
+		classAnnos = new ArrayList<>();
+		fields = new ArrayList<>();
+		methods = new ArrayList<>();
+		methodsMap = new HashMap<>();
+		fieldsMap = new HashMap<>();
 		if(file.exists()) {
 			loadedFromFile = true;
 			try {
@@ -111,6 +111,12 @@ public class JClass implements ILineReader {
 	public void addField(JField field) {
 		fields.add(field);
 		fieldsMap.put(field.name, field);
+	}
+	public void addFieldIfAbsent(JField field) {
+		if(!fieldsMap.containsKey(field.name)) {
+			fields.add(field);
+			fieldsMap.put(field.name, field);
+		}
 	}
 
 	public void updateMethod(JMethod method) {
@@ -199,6 +205,17 @@ public class JClass implements ILineReader {
 			jm.appendBodyLine(line);
 		}
 	}
+
+	public void addImport(String importClass) {
+		if(!importsSet.contains(importClass)) {
+			mImports.add(importClass);
+			importsSet.add(importClass);
+		}
+	}
+
+	public List<String> getImports() {
+		return mImports;
+	}
 	
 	public void writeToFile(String path) throws LibergToolException {
 		BufferedWriter bw = null;
@@ -276,7 +293,7 @@ public class JClass implements ILineReader {
 				mPackage = line.substring(8, line.length()-1).trim();
 			} else if(line.startsWith("import")) {
 				step = 1;
-				mImports.add(line.substring(7, line.length()-1).trim());
+				addImport(line.substring(7, line.length()-1).trim());
 			} else if(line.startsWith("@")) {//类的注解开始
 				step = 1;
 				classAnnos.add(line);

@@ -9,7 +9,10 @@ import java.util.List;
 
 public class LibergTool {
     public static final String PROJECT_NAME = "LibergCoder";
-    public static final String VERSION = "1.2.0";
+    /**
+     * LibergCoder的版本和Liberg库的版本应保持一致
+     */
+    public static final String VERSION = "1.3.0";
     public static final String MARK = PROJECT_NAME + "@" + VERSION;
 
     LibergToolContext context;
@@ -65,8 +68,9 @@ public class LibergTool {
             //misc.InitializerRunner.java
             TempInitializeRunner.createFileIfAbsent(ctx);
 
-            //添加mysql/fastjson依赖
+            //添加liberg/mysql/fastjson依赖
             TempApplicationPOM pom = new TempApplicationPOM(ctx);
+            pom.addLibergIfAbsent();
             pom.addMysqlIfAbsent();
             pom.addFastJsonIfAbsent();
             pom.save();

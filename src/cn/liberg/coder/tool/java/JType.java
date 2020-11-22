@@ -60,4 +60,21 @@ public class JType {
         }
         return rt;
     }
+
+    public static boolean isSimple(String type) {
+        boolean rt = false;
+        switch (type) {
+            case "byte":
+            case "int":
+            case "short":
+            case "long":
+            case "String":
+                rt = true;
+                break;
+            default:
+                break;
+        }
+        return rt;
+    }
+
 }

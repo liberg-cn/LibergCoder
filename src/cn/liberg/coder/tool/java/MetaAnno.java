@@ -127,6 +127,10 @@ public class MetaAnno {
         }
         return rt;
     }
+    public String getValue(String name, String attrName) {
+        MetaAnnoItem item = map.get(name);
+        return item!=null ? item.get(attrName) : null;
+    }
 
     private void parse(String annoLine) {
         String anno;
@@ -155,6 +159,7 @@ public class MetaAnno {
         }
 
         public void set(String key, String value) {
+            if(key == null)return;
             if (values == null) {
                 values = new HashMap<>();
             }
@@ -219,8 +224,7 @@ public class MetaAnno {
                         }
                         bw.write(key);
                         bw.write("=");
-                        bw.write(
-                                val);
+                        bw.write(val);
                         in = true;
                     }
                 }

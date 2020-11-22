@@ -44,7 +44,7 @@ public final class TempResponseBodyProcessor {
         bw.write("@ControllerAdvice\r\n");
         bw.write("public class ResponseBodyProcessor extends FastJsonHttpMessageConverter implements ResponseBodyAdvice {\r\n");
         bw.write("    public static final String utf8 = \"utf-8\";\r\n");
-        bw.write("    public static final Charset utf8Charset = utf8Charset = StandardCharsets.UTF_8;\r\n");
+        bw.write("    public static final Charset utf8Charset = StandardCharsets.UTF_8;\r\n");
         bw.write("    public static final String jsonpCallback = \"callback\";\r\n");
         bw.write("\r\n");
         bw.write("    @Override\r\n");

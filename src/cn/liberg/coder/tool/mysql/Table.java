@@ -71,28 +71,24 @@ public class Table {
         return table;
     }
 
-    //TableBuilder tb = new TableBuilder("case_words_case");
-    //        tb.add("_case_words_id", typeLong(), null);
-    //        stat.executeUpdate(tb.build());
     public JMethod toJMethod() {
         String line = "protected void " + createMethodPrefix + entityName + "(Statement stat) throws SQLException {";
         JMethod jm = new JMethod(line);
         ArrayList<String> body = jm.getBody();
-        body.add("        TableBuilder tb = new TableBuilder(\"" + name + "\");");
+        body.add("        TableBuilder tb = new TableBuilder(" + entityName + "Dao.self().getTableName());");
         for (TableField tf : fields) {
-            body.add(fieldLinePrefix + tf.toDefineLine() + ");");
+            body.add(fieldLinePrefix + entityName + tf.toDefineLine() + ");");
         }
         body.add("        stat.executeUpdate(tb.build());");
         return jm;
     }
-
 
     public TableUpgrader diffWith(Table t) {
         if (!name.equals(t.name)) return null;
 
         TableUpgrader upgrader = new TableUpgrader(name);
         TableField org;
-        String afterOf = Formats.TABLE_ID;
+        String afterOf = Formats.ID;
         for (TableField tf : fields) {
             org = t.getField(tf.name);
             if(org!=null) {//检查是否需要修改

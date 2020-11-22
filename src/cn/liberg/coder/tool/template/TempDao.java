@@ -27,6 +27,16 @@ public class TempDao {
 		TYPE_MAP.put("long", "LongColumn");
 		TYPE_MAP.put("Long", "LongColumn");
 	}
+	public static final Map<String, String> UPPER_TYPE_MAP = new HashMap<>();
+	static {
+		UPPER_TYPE_MAP.put("String", "String");
+		UPPER_TYPE_MAP.put("int", "Integer");
+		UPPER_TYPE_MAP.put("Integer", "Integer");
+		UPPER_TYPE_MAP.put("byte", "Byte");
+		UPPER_TYPE_MAP.put("Byte", "Byte");
+		UPPER_TYPE_MAP.put("long", "Long");
+		UPPER_TYPE_MAP.put("Long", "Long");
+	}
 
 	public TempDao(LibergToolContext ctx, JClassEntity entity) throws LibergToolException {
 		context = ctx;
@@ -55,15 +65,18 @@ public class TempDao {
 
 	private void initTemplate() {
 		parser.mPackage = context.getDaoPackage();
-		parser.mImports.add(context.getEntityPackage() + "." + entityName);
-		parser.mImports.add("cn.liberg.database.BaseDao");
-		parser.mImports.add("cn.liberg.database.query.*");
-		parser.mImports.add(context.getEntityPackage() + "." +entityName);
-		parser.mImports.add("java.sql.PreparedStatement");
-		parser.mImports.add("java.sql.ResultSet");
-		parser.mImports.add("java.sql.SQLException");
-		parser.mImports.add("java.util.ArrayList");
-		parser.mImports.add("java.util.List");
+		parser.addImport(context.getEntityPackage() + "." + entityName);
+		parser.addImport("cn.liberg.core.Column");
+		parser.addImport("cn.liberg.core.ByteColumn");
+		parser.addImport("cn.liberg.core.IntegerColumn");
+		parser.addImport("cn.liberg.core.LongColumn");
+		parser.addImport("cn.liberg.core.StringColumn");
+		parser.addImport("cn.liberg.database.BaseDao");
+		parser.addImport("java.sql.PreparedStatement");
+		parser.addImport("java.sql.ResultSet");
+		parser.addImport("java.sql.SQLException");
+		parser.addImport("java.util.ArrayList");
+		parser.addImport("java.util.List");
 
 		parser.name = selfName;
 		parser.defLine = "public class "+selfName+" extends BaseDao<"+entityName+"> {";
@@ -114,31 +127,33 @@ public class TempDao {
 
 
 		parser.addOrUpdateField(new JField("private static volatile "+selfName+" selfInstance;"));
-		String columnName;
 		String varName;
 		String typeName;
+		String upperType;
 		String upperFirstLetterType;
+		String shortName;
 		MetaAnno anno;
 		int index = 0;
 		for(JField jf : entity.fields) {
 			anno = jf.getAnno();
+			// @dbmap(isMap=false)的成员不映射到数据表的列
 			if(anno.hasFalse("dbmap", "isMap")) {
 				continue;
 			}
-			columnName = Formats.toTableFieldName(jf.name);
-			upperFirstLetterType = Formats.upperFirstLetter(jf.type);
-			varName = "column" + Formats.upperFirstLetter(jf.name);
+			// 被"号包裹的短名称
+			shortName = anno.getValue("JSONField", "name");
+			upperType = UPPER_TYPE_MAP.get(jf.type);
+			upperFirstLetterType = Formats.upperEntityField(jf.type);
+			varName = Formats.toColumnFieldName(jf.name);
 			typeName = TYPE_MAP.get(jf.type);
-			if(!Formats.ENTITY_ID.equals(jf.name)) {
-				parser.addField(new JField("public static final "+typeName + " " + varName+" = new "+typeName+"(\"" +columnName+ "\");"));
+			if(!Formats.ID.equals(jf.name)) {
+				parser.addField(new JField("public static final Column<"+upperType + "> " + varName+" = new "+typeName+"(\"" +jf.name+ "\", "+shortName+");"));
 				index++;
 				jm_buildEntity.appendBodyLine("        entity."+jf.name+" = rs.get"+upperFirstLetterType+"("+(index+1)+");");
 				jm_fillPreparedStatement.appendBodyLine("        ps.set"+upperFirstLetterType+"("+index+", entity."+jf.name+");");
 				jm_getColumns.appendBodyLine("            columns.add("+varName+");");
 			}
 		}
-
-
 		jm_buildEntity.appendBodyLine("        return entity;");
 		jm_getColumns.appendBodyLine("        }");
 		jm_getColumns.appendBodyLine("        return columns;");
